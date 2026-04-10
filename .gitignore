@@ -1,0 +1,38 @@
+# Gradle
+.gradle/
+build/
+*.jar
+*.zip
+*.tar.gz
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+*.iml
+*.iws
+*.ipr
+
+# Project specific
+srs.md
+node_modules/
+dist/
+out/
+
+# Environment
+.env
+.env.local
+*.log
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Dependencies
+.classpath
+.project
+.settings/
+target/
