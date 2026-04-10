@@ -1,0 +1,37 @@
+# .pre-commit-config.yaml
+minimum_pre_commit_version: "3.3.0"
+default_install_hook_types: [pre-commit, commit-msg]
+default_stages: [pre-commit]
+
+repos:
+  # --- General file hygiene ---
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0      # Check for latest: https://github.com/pre-commit/pre-commit-hooks/releases
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-xml
+      - id: check-added-large-files
+        args: ['--maxkb=1024']      # No files > 1MB in the repo
+      - id: check-merge-conflict
+      - id: detect-private-key       # Prevents accidentally committing SSH keys
+
+  # --- Conventional Commit enforcement ---
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v4.0.0      # Check for latest
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]
+        args:
+          - feat
+          - fix
+          - refactor
+          - test
+          - docs
+          - chore
+          - ci
+          - style
+          - perf
+          - build
