@@ -1,24 +1,24 @@
 services:
   db:
     image: postgres:16-alpine
-    container_name: fintrack-db
+    container_name: moneycopilot-db
     environment:
-      POSTGRES_DB: ${DB_NAME:-fintrack}
-      POSTGRES_USER: ${DB_USERNAME:-fintrack}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-fintrack_dev}
+      POSTGRES_DB: ${DB_NAME:-moneycopilot}
+      POSTGRES_USER: ${DB_USERNAME:-moneycopilot}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-moneycopilot_dev}
     ports:
       - "${DB_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-fintrack}"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-moneycopilot}"]
       interval: 5s
       timeout: 5s
       retries: 5
 
   redis:
     image: redis:7-alpine
-    container_name: fintrack-redis
+    container_name: moneycopilot-redis
     ports:
       - "${REDIS_PORT:-6379}:6379"
     volumes:

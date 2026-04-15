@@ -44,8 +44,8 @@ hexagonal architecture, comprehensive testing, CI/CD, and production deployment.
 ### Setup
 
 ```bash
-git clone https://github.com/yourusername/fintrack.git
-cd fintrack
+git clone https://github.com/yourusername/MoneyCopilot.git
+cd MoneyCopilot
 cp .env.example .env          # Edit with your local settings
 docker compose up -d db       # Start PostgreSQL
 ./gradlew bootRun             # Start the application
