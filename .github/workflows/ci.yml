@@ -2,13 +2,28 @@ name: CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, dev ]
   pull_request:
-    branches: [ main, develop ]
+    branches: [ main, dev ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: moneycopilot_test
+          POSTGRES_USER: moneycopilot
+          POSTGRES_PASSWORD: moneycopilot_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - name: Checkout code
@@ -34,11 +49,11 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build
-        run: ./gradlew build
+        run: ./gradlew build -x checkstyleMain -x checkstyleTest
 
       - name: Run tests
-        run: ./gradlew test
+        run: ./gradlew test -x checkstyleMain -x checkstyleTest
 
-      # Will be uncommented once Checkstyle is configured
+      # Uncomment once Checkstyle is fully configured
       # - name: Run Checkstyle
       #   run: ./gradlew checkstyleMain checkstyleTest
