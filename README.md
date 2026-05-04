@@ -1,23 +1,35 @@
 # MoneyCopilot — AI-Powered Personal Expense & Tax Tracker (Bangladesh)
 
-A backend system for personal finance management with Bangladesh-specific tax calculation,
+A backend REST API for personal finance management with Bangladesh-specific tax calculation,
 AI-powered insights, and bank statement import.
 
 Built as a learning project following industry-standard practices:
-hexagonal architecture, comprehensive testing, CI/CD, and production deployment.
+layered architecture evolving to hexagonal, comprehensive testing, CI/CD, and production deployment on Oracle Cloud.
 
 ## Tech Stack
 
-- **Language:** Java 21
-- **Framework:** Spring Boot 3.x
-- **Database:** PostgreSQL 16
-- **Cache:** Redis 7
-- **Build:** Gradle (Kotlin DSL)
-- **Architecture:** Hexagonal (Ports & Adapters) — from Iteration 4
-- **Testing:** JUnit 5, Mockito, Testcontainers, ArchUnit
-- **CI/CD:** GitHub Actions
-- **Deployment:** Docker Compose on Oracle Cloud Free Tier
-- **API Docs:** SpringDoc OpenAPI 3
+| Layer | Technology |
+|-------|-----------|
+| Language | Java 21 (LTS) |
+| Framework | Spring Boot 4.x |
+| Database | PostgreSQL 16 |
+| Schema migrations | Flyway |
+| Cache | Redis 7 |
+| Build | Gradle (Kotlin DSL) |
+| Security | Spring Security + JWT |
+| Validation | Jakarta Bean Validation |
+| API Docs | SpringDoc OpenAPI 3 |
+| Testing | JUnit 5, Mockito, Testcontainers, ArchUnit |
+| CI/CD | GitHub Actions |
+| Deployment | Docker Compose on Oracle Cloud Free Tier |
+| Code style | Google Java Style Guide (Checkstyle) |
+
+## Architecture
+
+Iterations 1–3 use a standard **layered architecture** (Controller → Service → Repository).
+Iteration 4 refactors to **Hexagonal Architecture** (Ports & Adapters) once the domain is well understood.
+
+See [docs/architecture.md](docs/architecture.md) for detailed decisions and ADRs.
 
 ## Development Status
 
@@ -33,29 +45,77 @@ hexagonal architecture, comprehensive testing, CI/CD, and production deployment.
 | 7 | DevOps & Production Readiness | ⬜ Planned |
 | 8 | Advanced Financial Intelligence | ⬜ Planned |
 
+## Iteration 0 — What was set up
+
+- Spring Boot project with Gradle Kotlin DSL
+- PostgreSQL + Redis via Docker Compose
+- Flyway for database schema migrations
+- Spring Security (JWT auth comes in Iteration 1)
+- Spring Boot Actuator (`/actuator/health`)
+- Checkstyle enforcing Google Java Style Guide
+- EditorConfig for consistent formatting across editors
+- Pre-commit hooks with Conventional Commits enforcement
+- GitHub Actions CI — builds and runs tests on every push to `main` and `dev`
+- Project documentation structure (`docs/`, `CHANGELOG.md`)
+
+## Iteration 1 — What's coming
+
+- User registration and JWT-based login + token refresh
+- Full expense CRUD with pagination, filtering, and soft-delete
+- Predefined expense categories (`FOOD`, `TRANSPORT`, `BILLS`, etc.)
+- Global exception handler returning RFC 7807 Problem Details
+- Swagger UI at `/docs`
+- Testcontainers-based integration tests
+
+## Branch Strategy
+
+```
+main        — production-ready code
+dev         — integration branch (all features merge here first)
+feature/*   — new features
+fix/*       — bug fixes
+```
+
 ## Local Development
 
 ### Prerequisites
 
-- Java 21 (recommend [Eclipse Temurin](https://adoptium.net/))
-- Docker & Docker Compose (for PostgreSQL)
+- Java 21 ([Eclipse Temurin](https://adoptium.net/) recommended)
+- Docker & Docker Compose
 - Git
 
 ### Setup
 
 ```bash
-git clone https://github.com/yourusername/MoneyCopilot.git
+git clone https://github.com/imnasim31415/MoneyCopilot.git
 cd MoneyCopilot
-cp .env.example .env          # Edit with your local settings
-docker compose up -d db       # Start PostgreSQL
-./gradlew bootRun             # Start the application
+cp .env.example .env          # fill in your local values
+docker compose up -d db       # start PostgreSQL
+./gradlew bootRun             # start the application
 ```
 
-API docs available at: http://localhost:8080/docs
+App runs at `http://localhost:8080`
 
-## Architecture
+| Endpoint | Description |
+|----------|-------------|
+| `GET /actuator/health` | Health check |
+| `GET /docs` | Swagger UI (available from Iteration 1) |
 
-See [docs/architecture.md](docs/architecture.md) for detailed architecture documentation.
+### Running Tests
+
+```bash
+./gradlew test
+```
+
+Integration tests use Testcontainers — Docker must be running.
+
+### Code Style
+
+Checkstyle enforces the Google Java Style Guide. Run it manually:
+
+```bash
+./gradlew checkstyleMain checkstyleTest
+```
 
 ## License
 
