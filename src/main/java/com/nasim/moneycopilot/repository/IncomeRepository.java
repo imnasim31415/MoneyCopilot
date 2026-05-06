@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -76,4 +77,17 @@ public interface IncomeRepository extends JpaRepository<Income, UUID> {
   List<Object[]> monthlyTotals(
       @Param("userId") UUID userId,
       @Param("startDate") LocalDate startDate);
+
+  /** Total income for a user within a fiscal date range (for tax calculation). */
+  @Query("""
+      SELECT COALESCE(SUM(i.amount), 0) FROM Income i
+      WHERE i.user.id = :userId
+        AND i.deletedAt IS NULL
+        AND i.incomeDate >= :from
+        AND i.incomeDate <= :to
+      """)
+  BigDecimal sumByUserAndDateRange(
+      @Param("userId") UUID userId,
+      @Param("from") LocalDate from,
+      @Param("to") LocalDate to);
 }
